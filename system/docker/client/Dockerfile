@@ -1,4 +1,4 @@
-FROM teracy/ubuntu:16.04-dind-latest
+FROM teracy/ubuntu:20.04-dind-latest
 
 # generally useful packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -38,6 +38,13 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 \
     && echo "deb http://security.ubuntu.com/ubuntu bionic-security main"  >> /etc/apt/sources.list \
     && echo "deb https://repo.sovrin.org/sdk/deb bionic master" >> /etc/apt/sources.list \
     && apt-get update
+
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3BC8C2DD662F1C45 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9692C00E657DDE61
+RUN add-apt-repository "deb https://sovrin.jfrog.io/artifactory/deb focal dev"
+RUN add-apt-repository "deb https://hyperledger.jfrog.io/artifactory/indy focal dev rc" && apt-get update -y
 
 # indy dependencies
 ARG LIBINDY_VERSION
