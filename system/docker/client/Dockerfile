@@ -2,13 +2,15 @@ FROM teracy/ubuntu:20.04-dind-latest
 
 # generally useful packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    apt-transport-https \
-    software-properties-common \
-    curl \
-    wget \
-    ssh \
-    vim \
+        openssl \
+        gnupg \
+        ca-certificates \
+        apt-transport-https \
+        software-properties-common \
+        curl \
+        wget \
+        ssh \
+        vim \
     && rm -rf /var/lib/apt/lists/*
 
 # python
@@ -22,11 +24,13 @@ RUN apt-get update && apt-get install -y \
 # https://github.com/pypa/pip/issues/5240
 # https://github.com/pypa/pip/issues/5221
 RUN python3 -m pip install -U \
-    pip==10.0.0 \
-    setuptools \
-    virtualenv==16.0.0 \
-    pipenv==2018.11.26 \
+        'pip<10.0.0' \
+        'setuptools<=50.3.2' \
+        virtualenv==16.0.0 \
+        pipenv==2018.11.26 \
     && pip3 list
+
+RUN apt-get update -y && apt-get upgrade -y
 
 # sovrin repo init
 ARG CLIENT_REPO_COMPONENT

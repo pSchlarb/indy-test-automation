@@ -23,8 +23,8 @@ RUN apt-get update -y && apt-get install -y \
 
 # pip<10.0.0 is important. pip==10.0.0 doesn't work.
 RUN pip3 install -U \
-    'pip<10.0.0' \
-    setuptools
+        'pip<10.0.0' \
+        'setuptools<=50.3.2'
 
 # sovrin repo init
 ARG NODE_REPO_COMPONENT
@@ -84,16 +84,16 @@ ARG SOVTOKEN_VERSION
 ARG SOVTOKENFEES_VERSION
 ENV SOVTOKEN_VERSION=${SOVTOKEN_VERSION:-1.2.0-dev1666268500}
 ENV SOVTOKENFEES_VERSION=${SOVTOKENFEES_VERSION:-${SOVTOKEN_VERSION}}
-RUN \
-    set -ex; \
-    apt-get update && apt-get install -y \
-    sovtoken=${SOVTOKEN_VERSION} \
-    sovtokenfees=${SOVTOKENFEES_VERSION}; \
-    rm -rf /var/lib/apt/lists/*; 
-
-# repo cleanup
-RUN sed '/deb https:\/\/repo.sovrin.org\/sdk\/deb xenial ${NODE_REPO_COMPONENT}/d' /etc/apt/sources.list \
-    && rm -rf /var/lib/apt/lists/*
+RUN if [ "$TOKEN_PLUGINS_INSTALL" = "yes" ]; then \
+# RUN \
+        set -ex; \
+        apt-get update && apt-get install -y \
+            sovrin=${SOVRIN_VERSION} \
+            sovtoken=${SOVTOKEN_VERSION} \
+            sovtokenfees=${SOVTOKENFEES_VERSION}; \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
+    
 
 # network config
 RUN echo " " >> /etc/indy/indy_config.py \
@@ -102,8 +102,12 @@ RUN echo " " >> /etc/indy/indy_config.py \
     && echo "logLevel = 0" >> /etc/indy/indy_config.py \
     && echo " " >> /etc/indy/indy_config.py
 
+# Server side ssh configuration
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 COPY test_key.pub /root/.ssh/authorized_keys
+RUN chmod 700 /root/.ssh && \
+    chmod 600 /root/.ssh/authorized_keys
+
 ## hotfix indy-node-control files here
 #COPY node_control_utils_1_1_35.py /usr/local/lib/python3.5/dist-packages/indy_node/utils/node_control_utils.py
 #RUN chmod 644 /usr/local/lib/python3.5/dist-packages/indy_node/utils/node_control_utils.py \
