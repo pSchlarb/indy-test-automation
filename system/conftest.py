@@ -189,7 +189,8 @@ async def ssh_config():
         "    HostName 10.0.0.{node_ip_part}\n"
         "    User root\n"
         "    IdentityFile ~/.ssh/test_key\n"
-        "    StrictHostKeyChecking no"
+        "    StrictHostKeyChecking no\n"
+        "    UserKnownHostsFile=/dev/null"
     )
     config = '\n'.join([
         config_entry.format(node_id=(i + 1), node_ip_part=(i + 2))
