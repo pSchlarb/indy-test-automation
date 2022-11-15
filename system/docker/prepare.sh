@@ -44,8 +44,11 @@ docker_compose_image_name="${image_repository}:docker-compose"
 
 node_env_variables=" \
     NODE_REPO_COMPONENT \
+    NODE_SOVRIN_REPO_COMPONENT \
     INDY_PLENUM_VERSION \
     INDY_NODE_VERSION \
+    UBUNTU_VERSION \
+    PYTHON3_PYZMQ_VERSION \
     SOVRIN_INSTALL \
     SOVRIN_VERSION \
     SOVTOKEN_VERSION \
@@ -53,11 +56,15 @@ node_env_variables=" \
     TOKEN_PLUGINS_INSTALL \
     URSA_VERSION \
 "
+
 client_env_variables=" \
-    CLIENT_REPO_COMPONENT \
+    CLIENT_SOVRIN_REPO_COMPONENT \
     LIBINDY_CRYPTO_VERSION \
     LIBSOVTOKEN_INSTALL \
     LIBSOVTOKEN_VERSION \
+    DIND_CONTAINER_REGISTRY \
+    DIND_IMAGE_NAME\
+    UBUNTU_VERSION \
 "
 
 echo "Docker version..."
@@ -84,10 +91,11 @@ docker run -t --rm \
     -u "$user_id" \
     -e "IMAGE_REPOSITORY=$image_repository" \
     -e u_id="$user_id" \
-    -e CLIENT_REPO_COMPONENT \
+    -e CLIENT_SOVRIN_REPO_COMPONENT \
     -e LIBINDY_VERSION \
-    -e LIBSOVTOKEN_INSTALL \
-    -e LIBSOVTOKEN_VERSION \
+    -e DIND_CONTAINER_REGISTRY \
+    -e DIND_IMAGE_NAME \
+    -e UBUNTU_VERSION \
     "$docker_compose_image_name" docker-compose -f system/docker/docker-compose.yml build client
 
 # 3. build node image
@@ -100,16 +108,19 @@ docker run -t --rm \
     -e "IMAGE_REPOSITORY=$image_repository" \
     -e u_id="$user_id" \
     -e NODE_REPO_COMPONENT \
-    -e PYTHON3_PYZMQ_VERSION \
-    -e INDY_PLENUM_VERSION \
     -e INDY_NODE_VERSION \
+    -e INDY_PLENUM_VERSION \
     -e TOKEN_PLUGINS_INSTALL \
     -e SOVRIN_VERSION \
     -e SOVRIN_INSTALL \
     -e SOVTOKEN_VERSION \
     -e SOVTOKENFEES_VERSION \
     -e URSA_VERSION \
+    -e PYTHON3_PYZMQ_VERSION \
+    -e NODE_SOVRIN_REPO_COMPONENT \
+    -e UBUNTU_VERSION \
     "$docker_compose_image_name" docker-compose -f system/docker/docker-compose.yml build node
+
 
 docker images "$image_repository"
 
