@@ -93,10 +93,12 @@ docker run -t --rm \
     -e u_id="$user_id" \
     -e CLIENT_SOVRIN_REPO_COMPONENT \
     -e LIBINDY_VERSION \
+    -e LIBSOVTOKEN_INSTALL \
+    -e LIBSOVTOKEN_VERSION \
     -e DIND_CONTAINER_REGISTRY \
     -e DIND_IMAGE_NAME \
     -e UBUNTU_VERSION \
-    "$docker_compose_image_name" docker-compose -f system/docker/docker-compose.yml build client
+    "$docker_compose_image_name" docker-compose -f system/docker/docker-compose.yml build --no-cache client
 
 # 3. build node image
 docker run -t --rm \
@@ -119,7 +121,7 @@ docker run -t --rm \
     -e PYTHON3_PYZMQ_VERSION \
     -e NODE_SOVRIN_REPO_COMPONENT \
     -e UBUNTU_VERSION \
-    "$docker_compose_image_name" docker-compose -f system/docker/docker-compose.yml build node
+    "$docker_compose_image_name" docker-compose -f system/docker/docker-compose.yml build --no-cache node
 
 
 docker images "$image_repository"

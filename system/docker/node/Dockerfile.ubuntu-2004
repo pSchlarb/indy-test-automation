@@ -94,16 +94,22 @@ ARG SOVRIN_VERSION
 ENV SOVRIN_INSTALL=$SOVRIN_INSTALL
 ENV SOVRIN_VERSION=${SOVRIN_VERSION:-1.1.69}
 COPY . . 
-RUN if [ "$SOVRIN_INSTALL" = "yes" ]; then \
-    dpkg -i "sovrin.deb"; \
-    #    dpkg -i "sovrin_${SOVRIN_VERSION}_amd64.deb"; \
-    fi
+
+# RUN echo "SOVRIN_INSTALL: ${SOVRIN_INSTALL}"
+# RUN if [ "${SOVRIN_INSTALL}" = "yes" ]; then \
+#     dpkg -i "sovrin.deb"; \
+#     #    dpkg -i "sovrin_${SOVRIN_VERSION}_amd64.deb"; \
+#     fi
 
 ARG SOVTOKEN_VERSION
 ARG SOVTOKENFEES_VERSION
+ARG TOKEN_PLUGINS_INSTALL
+ENV TOKEN_PLUGINS_INSTALL=${TOKEN_PLUGINS_INSTALL}
 ENV SOVTOKEN_VERSION=${SOVTOKEN_VERSION:-1.2.0-dev1663181681}
 ENV SOVTOKENFEES_VERSION=${SOVTOKENFEES_VERSION:-${SOVTOKEN_VERSION}}
-RUN if [ "$TOKEN_PLUGINS_INSTALL" = "yes" ]; then \
+
+RUN echo "TOKEN_PLUGINS_INSTALL: ${TOKEN_PLUGINS_INSTALL}"
+RUN if [ "${TOKEN_PLUGINS_INSTALL}" = "yes" ]; then \
 # RUN \
         set -ex; \
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3BC8C2DD662F1C45; \

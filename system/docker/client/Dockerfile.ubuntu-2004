@@ -50,9 +50,11 @@ RUN apt-get install -y \
 
 ARG LIBSOVTOKEN_INSTALL
 ARG LIBSOVTOKEN_VERSION
-ENV LIBSOVTOKEN_INSTALL=$LIBSOVTOKEN_INSTALL
+ENV LIBSOVTOKEN_INSTALL=${LIBSOVTOKEN_INSTALL}
 ENV LIBSOVTOKEN_VERSION=${LIBSOVTOKEN_VERSION:-1.0.5}
-RUN if [ "$LIBSOVTOKEN_INSTALL" = "yes" ]; then \
+
+RUN echo "LIBSOVTOKEN_INSTALL: ${LIBSOVTOKEN_INSTALL}"
+RUN if [ "${LIBSOVTOKEN_INSTALL}" = "yes" ]; then \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3BC8C2DD662F1C45; \
     apt-get update && apt-get install -y \
     libsovtoken=${LIBSOVTOKEN_VERSION}; \
